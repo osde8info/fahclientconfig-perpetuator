@@ -42,7 +42,7 @@ if [ -f ${CONFIGFILE} ]; then
     echo "Host ${IP}" >> ${CONFIGFILE}
     echo "  Preferredauthentications publickey" >> ${CONFIGFILE}
     echo "  IdentityFile ${RSA}" >> ${CONFIGFILE}
-    echo ""
+    echo "" >> ${CONFIGFILE}
   fi;
 fi;
 if [ -f ${FAHCONFIG} ]; then
