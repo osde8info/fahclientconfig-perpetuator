@@ -29,10 +29,6 @@ if [ ! -f ${RSAPUB} ]; then
     echo "Generating ${RSAPUB}"
     ssh-keygen -t RSA -C "folding@michaelpmcd.com" -f ${RSA} -N ''
 fi;
-if [ ! -f ${RSAPUB} ]; then
-  echo "Copying ID into place. You'll need to type in the password for this one."
-  ssh-copy-id -i ${RSAPUB} -oStrictHostKeyChecking=no ${FAHSRVUSER}@${IP}
-fi;
 if [ ! -f ${CONFIGFILE} ]; then
   touch ${CONFIGFILE}
   chmod 600 ${CONFIGFILE}
@@ -43,6 +39,10 @@ if [ -f ${CONFIGFILE} ]; then
     echo "  Preferredauthentications publickey" >> ${CONFIGFILE}
     echo "  IdentityFile ${RSA}" >> ${CONFIGFILE}
     echo "" >> ${CONFIGFILE}
+    if [ -f ${RSAPUB} ]; then
+      echo "Copying ID into place. You'll need to type in the password for this one."
+      ssh-copy-id -i ${RSAPUB} -oStrictHostKeyChecking=no ${FAHSRVUSER}@${IP}
+    fi;
   fi;
 fi;
 if [ -f ${FAHCONFIG} ]; then
