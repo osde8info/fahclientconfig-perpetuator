@@ -19,8 +19,8 @@ fi;
 IPBASE="192.168"
 IP="${IPBASE}.$1.$2"
 FAHSRVUSER="root"
-RSA="id_rsa.fahclient${2}"
-RSAPUB="${HOME}/.ssh/${RSA}.pub"
+RSA="${HOME}/.ssh/id_rsa.fahclient${2}"
+RSAPUB="${RSA}.pub"
 FAHCONFIG="/etc/fahclient/config.xml"
 FAHINIT="/etc/init.d/FAHClient"
 if [ ! -f ${RSAPUB} ]; then
