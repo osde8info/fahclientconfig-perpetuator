@@ -19,7 +19,9 @@ fi;
 IPBASE="192.168"
 IP="${IPBASE}.$1.$2"
 FAHSRVUSER="root"
-RSA="${HOME}/.ssh/id_rsa.fahclient${2}"
+SSHHOME="${HOME}/.ssh"
+CONFIGFILE="${SSHHOME}/config"
+RSA="${SSHHOME}/id_rsa.fahclient${2}"
 RSAPUB="${RSA}.pub"
 FAHCONFIG="/etc/fahclient/config.xml"
 FAHINIT="/etc/init.d/FAHClient"
@@ -30,6 +32,18 @@ fi;
 if [ ! -f ${RSAPUB} ]; then
   echo "Copying ID into place. You'll need to type in the password for this one."
   ssh-copy-id -i ${RSAPUB} -oStrictHostKeyChecking=no ${FAHSRVUSER}@${IP}
+fi;
+if [ ! -f ${CONFIGFILE} ]; then
+  touch ${CONFIGFILE}
+  chmod 600 ${CONFIGFILE}
+fi;
+if [ -f ${CONFIGFILE} ]; then
+  if [ -z "$(cat ${CONFIGFILE} | grep ${IP})" ]; then
+    echo "Host ${IP}" >> ${CONFIGFILE}
+    echo "  Preferredauthentications publickey" >> ${CONFIGFILE}
+    echo "  IdentityFile ${RSA}" >> ${CONFIGFILE}
+    echo ""
+  fi;
 fi;
 if [ -f ${FAHCONFIG} ]; then
   scp ${FAHCONFIG} ${FAHSRVUSER}@${IP}:${FAHCONFIG}
