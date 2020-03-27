@@ -38,8 +38,8 @@ fi;
 for i in $(seq ${START_IP} ${END_IP}); do
   HOST_IP="${IPBASE}.${1}.${i}"
   echo "Checking ${HOST_IP}"
-  CLIENT=$(timeout 1s bash -c "(echo >/dev/tcp/${HOST_IP}/${FAHPORT}) &>/dev/null && echo 1")
-  if [ ${CLIENT} ]; then
+  CLIENTALIVE=$(timeout 1s bash -c "(echo >/dev/tcp/${HOST_IP}/${FAHPORT}) &>/dev/null && echo 1")
+  if [ ${CLIENTALIVE} ]; then
     echo ${HOST_IP} >> ${HOSTSFILE}
   fi;
 done;
