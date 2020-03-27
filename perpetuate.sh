@@ -1,7 +1,7 @@
 #!/bin/bash
 ###############################################################################
 # This file: https://tinyurl.com/tmkvlx3
-# Full Archive: https://preview.tinyurl.com/rhtaopq
+# Full Archive: https://tinyurl.com/rhtaopq
 ###############################################################################
 if [ -z "${HOME}" ]; then
   echo "ERROR: Relies on environment variables. Can't run in CRON"
@@ -35,8 +35,10 @@ if [ -z "${CLIENTALIVE}" ]; then
 fi;
 ###############################################################################
 # Search for and install sshpass
+echo "Validating 'sshpass' is installed"
 INSTALLED=$(tdnf list installed | grep sshpass)
 if [ -z "${INSTALLED}" ]; then
+  echo "Installing sshpass"
   tdnf -y install sshpass
 fi;
 ###############################################################################
