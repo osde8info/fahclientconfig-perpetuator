@@ -33,7 +33,7 @@ if [ -f ${CONFIGFILE} ]; then
   if [ -z "$(cat ${CONFIGFILE} | grep ${HOST_IP})" ]; then
     if [ -f ${RSAPUB} ]; then
       echo "Copying ID into place. You'll need to type in the password for this one."
-      # ssh-copy-id -i ${RSAPUB} -oStrictHostKeyChecking=no ${FAHSRVUSER}@${HOST_IP}
+      ssh-copy-id -i ${RSAPUB} -oStrictHostKeyChecking=no ${FAHSRVUSER}@${HOST_IP}
     fi;
     echo "Generating config file Host entry (${HOST_IP})"
     echo "" >> ${CONFIGFILE}
