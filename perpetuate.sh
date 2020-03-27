@@ -7,23 +7,17 @@ if [ -z "${HOME}" ]; then
   exit 1;
 fi;
 if [ -z "${1}" ]; then
-  echo "ERROR: Need to know both octets!"
-  echo "    Example: ${0} 19 50"
-  echo "       Sets up 192.168.19.50"
+  echo "ERROR: Need to know IP to perpetuate to!"
+  echo "    Example: ${0} 192.168.19.50"
+  echo "       Sets up 192.168.19.50 with SSH keys"
   exit 1;
 fi;
-if [ -z "${2}" ]; then
-  echo "ERROR: Need to know both octets!"
-  echo "    Example: ${0} ${1} 50"
-  echo "       Sets up 192.168.${1}.50"
-  exit 1;
-fi;
-IPBASE="192.168"
-IP="${IPBASE}.$1.$2"
+HOST_${HOST_IP}=${1}
+LAST_OCTET=$(${HOST_IP} | awk -F. '{print $4}')
 FAHSRVUSER="root"
 SSHHOME="${HOME}/.ssh"
 CONFIGFILE="${SSHHOME}/config"
-RSA="${SSHHOME}/id_rsa.fahclient${2}"
+RSA="${SSHHOME}/id_rsa.fahclient${LAST_OCTET}"
 RSAPUB="${RSA}.pub"
 FAHCONFIG="/etc/fahclient/config.xml"
 FAHINIT="/etc/init.d/FAHClient"
@@ -36,18 +30,18 @@ if [ ! -f ${CONFIGFILE} ]; then
   chmod 600 ${CONFIGFILE}
 fi;
 if [ -f ${CONFIGFILE} ]; then
-  if [ -z "$(cat ${CONFIGFILE} | grep ${IP})" ]; then
-    echo "Host ${IP}" >> ${CONFIGFILE}
+  if [ -z "$(cat ${CONFIGFILE} | grep ${HOST_IP})" ]; then
+    echo "Host ${HOST_IP}" >> ${CONFIGFILE}
     echo "  Preferredauthentications publickey" >> ${CONFIGFILE}
     echo "  IdentityFile ${RSA}" >> ${CONFIGFILE}
     echo "" >> ${CONFIGFILE}
     if [ -f ${RSAPUB} ]; then
       echo "Copying ID into place. You'll need to type in the password for this one."
-      ssh-copy-id -i ${RSAPUB} -oStrictHostKeyChecking=no ${FAHSRVUSER}@${IP}
+      ssh-copy-id -i ${RSAPUB} -oStrictHostKeyChecking=no ${FAHSRVUSER}@${HOST_IP}
     fi;
   fi;
 fi;
 if [ -f ${FAHCONFIG} ]; then
-  scp ${FAHCONFIG} ${FAHSRVUSER}@${IP}:${FAHCONFIG}
-  ssh ${FAHSRVUSER}@${IP} "${FAHINIT} stop; sleep 2; ${FAHINIT} start;"
+  scp ${FAHCONFIG} ${FAHSRVUSER}@${HOST_IP}:${FAHCONFIG}
+  ssh ${FAHSRVUSER}@${HOST_IP} "${FAHINIT} stop; sleep 2; ${FAHINIT} start;"
 fi;
