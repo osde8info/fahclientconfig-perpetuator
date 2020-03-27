@@ -13,7 +13,7 @@ if [ -z "${1}" ]; then
   exit 1;
 fi;
 HOST_IP=${1}
-LAST_OCTET=$(${HOST_IP} | awk -F. '{print $4}')
+LAST_OCTET=$(echo ${HOST_IP} | awk -F. '{print $4}')
 FAHSRVUSER="root"
 SSHHOME="${HOME}/.ssh"
 CONFIGFILE="${SSHHOME}/config"
@@ -31,17 +31,19 @@ if [ ! -f ${CONFIGFILE} ]; then
 fi;
 if [ -f ${CONFIGFILE} ]; then
   if [ -z "$(cat ${CONFIGFILE} | grep ${HOST_IP})" ]; then
-    echo "Host ${HOST_IP}" >> ${CONFIGFILE}
-    echo "  Preferredauthentications publickey" >> ${CONFIGFILE}
-    echo "  IdentityFile ${RSA}" >> ${CONFIGFILE}
-    echo "" >> ${CONFIGFILE}
     if [ -f ${RSAPUB} ]; then
       echo "Copying ID into place. You'll need to type in the password for this one."
-      ssh-copy-id -i ${RSAPUB} -oStrictHostKeyChecking=no ${FAHSRVUSER}@${HOST_IP}
+      # ssh-copy-id -i ${RSAPUB} -oStrictHostKeyChecking=no ${FAHSRVUSER}@${HOST_IP}
     fi;
+    echo "Generating config file Host entry (${HOST_IP})"
+    echo "" >> ${CONFIGFILE}
+    echo "Host ${HOST_IP}" >> ${CONFIGFILE}
+    echo "  PreferredAuthentications publickey" >> ${CONFIGFILE}
+    echo "  IdentityFile ${RSA}" >> ${CONFIGFILE}
   fi;
 fi;
 if [ -f ${FAHCONFIG} ]; then
+  echo "Copying ${FAHCONFIG} into ${HOST_IP}"
   scp ${FAHCONFIG} ${FAHSRVUSER}@${HOST_IP}:${FAHCONFIG}
   ssh ${FAHSRVUSER}@${HOST_IP} "${FAHINIT} stop; sleep 2; ${FAHINIT} start;"
 fi;
