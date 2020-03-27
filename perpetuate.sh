@@ -12,7 +12,7 @@ if [ -z "${1}" ]; then
   echo "       Sets up 192.168.19.50 with SSH keys"
   exit 1;
 fi;
-HOST_${HOST_IP}=${1}
+HOST_IP=${1}
 LAST_OCTET=$(${HOST_IP} | awk -F. '{print $4}')
 FAHSRVUSER="root"
 SSHHOME="${HOME}/.ssh"
