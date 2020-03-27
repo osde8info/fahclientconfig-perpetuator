@@ -9,11 +9,13 @@ fi;
 if [ -z "${1}" ]; then
   echo "ERROR: Need to know both octets!"
   echo "    Example: ${0} 19 50"
+  echo "       Sets up 192.168.19.50"
   exit 1;
 fi;
 if [ -z "${2}" ]; then
   echo "ERROR: Need to know both octets!"
-  echo "    Example: ${0} 19 50"
+  echo "    Example: ${0} ${1} 50"
+  echo "       Sets up 192.168.${1}.50"
   exit 1;
 fi;
 IPBASE="192.168"
