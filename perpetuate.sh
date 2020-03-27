@@ -36,7 +36,7 @@ fi;
 ###############################################################################
 # Search for and install sshpass
 INSTALLED=$(tdnf list installed | grep sshpass)
-if [ -z "${INSTALLED}" ]l then
+if [ -z "${INSTALLED}" ]; then
   tdnf -y install sshpass
 fi;
 ###############################################################################
